@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Sinh viên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-image: url(https://www.shutterstock.com/image-vector/education-3d-isometric-web-icons-260nw-1273277374.jpg);
+            background-size: 100% 700px;
+            background-repeat: no-repeat;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Quản lý Sinh viên</h2>
+
+    <!-- Form thêm mới Sinh viên -->
+    <form id="addForm">
+        <label for="studentName">Họ và tên:</label>
+        <input type="text" id="studentName" required>
+        <label for="studentID">Mã Sinh viên:</label>
+        <input type="text" id="studentID" required>
+        <button type="button" onclick="addStudent()">Thêm Sinh viên</button>
+    </form>
+
+    <!-- Bảng hiển thị danh sách Sinh viên -->
+    <table>
+        <thead>
+            <tr>
+                <th>Họ và tên</th>
+                <th>Mã Sinh viên</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="studentList">
+            <!-- Dữ liệu Sinh viên sẽ được hiển thị ở đây -->
+        </tbody>
+    </table>
+
+    <!-- Script JavaScript để xử lý các chức năng -->
+    <script>
+        let students = [];
+
+        function addStudent() {
+            const studentName = document.getElementById('studentName').value;
+            const studentID = document.getElementById('studentID').value;
+
+            if (studentName && studentID) {
+                students.push({ name: studentName, id: studentID });
+                displayStudents();
+                document.getElementById('addForm').reset();
+            } else {
+                alert('Vui lòng nhập đầy đủ thông tin Sinh viên.');
+            }
+        }
+
+        function displayStudents() {
+            const studentListContainer = document.getElementById('studentList');
+            studentListContainer.innerHTML = '';
+
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.id}</td>
+                    <td>
+                        <button onclick="editStudent('${student.id}')">Sửa</button>
+                        <button onclick="deleteStudent('${student.id}')">Xóa</button>
+                    </td>
+                `;
+                studentListContainer.appendChild(row);
+            });
+        }
+
+        function editStudent(studentID) {
+            const newName = prompt('Nhập tên mới:');
+            if (newName) {
+                const index = students.findIndex(student => student.id === studentID);
+                if (index !== -1) {
+                    students[index].name = newName;
+                    displayStudents();
+                }
+            }
+        }
+
+        function deleteStudent(studentID) {
+            const confirmDelete = confirm('Bạn có chắc chắn muốn xóa Sinh viên này?');
+            if (confirmDelete) {
+                students = students.filter(student => student.id !== studentID);
+                displayStudents();
+            }
+        }
+    </script>
+</body>
+</html>
